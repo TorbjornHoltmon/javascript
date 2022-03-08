@@ -8,6 +8,8 @@ import { SessionWithActivitiesResource } from './session';
 import { GetUserTokenOptions,JWTService } from './token';
 import { SnakeToCamel } from './utils';
 import { Web3WalletResource } from './web3Wallet';
+import { OAuthStrategy } from './oauth';
+import { VerificationResource } from './verification';
 
 export interface UserResource extends ClerkResource {
   id: string;
@@ -45,6 +47,7 @@ export interface UserResource extends ClerkResource {
   ) => Promise<string>;
   getSessions: () => Promise<SessionWithActivitiesResource[]>;
   setProfileImage: (file: Blob | File) => Promise<ImageResource>;
+  connectExternalAccount: ({ strategy, redirect_url }: { strategy: OAuthStrategy, redirect_url?: string }) => Promise<VerificationResource>;
 }
 
 type UpdateUserJSON = Pick<

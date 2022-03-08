@@ -5,10 +5,13 @@ import type {
   GetUserTokenOptions,
   ImageResource,
   JWTService,
+  OAuthStrategy,
   PhoneNumberResource,
   UpdateUserParams,
   UserJSON,
   UserResource,
+  VerificationJSON,
+  VerificationResource,
   Web3WalletResource,
 } from '@clerk/types';
 import { unixEpochToDate } from 'utils/date';
@@ -24,7 +27,7 @@ import {
   Organization,
   PhoneNumber,
   SessionWithActivities,
-  Token,
+  Token, Verification,
   Web3Wallet,
 } from './internal';
 import {
@@ -116,6 +119,18 @@ export class User extends BaseResource implements UserResource {
       this.path() + '/phone_numbers/',
     ).create();
   };
+
+  connectExternalAccount = async ({ strategy, redirect_url }: { strategy: OAuthStrategy, redirect_url?: string }): Promise<VerificationResource> => {
+    const json = (
+      await BaseResource._fetch<VerificationJSON>({
+        path: '/me/external_accounts/connect',
+        method: 'POST',
+        body: { strategy, redirect_url } as any,
+      })
+    )?.response as unknown as VerificationJSON;
+
+    return new Verification(json);
+  }
 
   update = (params: UpdateUserParams): Promise<UserResource> => {
     return this._basePatch({

@@ -102,9 +102,15 @@ jest.mock('ui/contexts', () => ({
       social: {
         oauth_google: {
           enabled: true,
+          required: false,
+          authenticatable: true,
+          strategy: 'oauth_google',
         },
         oauth_facebook: {
           enabled: true,
+          required: false,
+          authenticatable: true,
+          strategy: 'oauth_facebook',
         },
       },
     } as Partial<UserSettings>,

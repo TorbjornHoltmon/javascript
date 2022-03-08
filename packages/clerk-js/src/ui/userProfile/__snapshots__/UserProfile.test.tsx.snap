@@ -3364,6 +3364,37 @@ Array [
             </div>
           </div>
         </button>
+        <button
+          className="cl-list-item elementContainer button hoverable"
+          disabled={false}
+          onClick={[Function]}
+        >
+          <div
+            className="listItem line"
+          >
+            <div
+              className="start"
+            >
+              <div>
+                <img
+                  alt="oauth_google"
+                  className="cl-left-icon-wrapper"
+                  src="https://images.clerk.dev/static/google.svg"
+                />
+                Connect 
+                Google
+                 account
+              </div>
+            </div>
+            <div
+              className="iconContainer"
+            >
+              <svg
+                data-filename="../shared/assets/icons/arrow-right.svg"
+              />
+            </div>
+          </div>
+        </button>
       </div>
     </div>
     <div

@@ -1,6 +1,13 @@
 import { renderJSON } from '@clerk/shared/testUtils';
-import { ExternalAccountResource, UserResource } from '@clerk/types';
+import {
+  ExternalAccountResource,
+  UserResource,
+  UserSettingsJSON,
+  UserSettingsResource
+} from '@clerk/types';
+import { OAuthProviders } from "@clerk/types/src";
 import { ExternalAccount } from 'core/resources/ExternalAccount';
+import { UserSettings } from 'core/resources/UserSettings';
 import React from 'react';
 
 import { ConnectedAccountList } from './ConnectedAccountList';
@@ -13,6 +20,8 @@ jest.mock('ui/hooks', () => ({
     };
   },
 }));
+
+const mockUseEnvironment = jest.fn();
 
 jest.mock('ui/contexts', () => {
   return {
@@ -45,8 +54,71 @@ jest.mock('ui/contexts', () => {
         ],
       };
     },
+    useEnvironment: () => mockUseEnvironment(),
   };
 });
+
+const environmentContext = {
+  userSettings: new UserSettings({
+    social: {
+      oauth_google: {
+        enabled: true,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_google',
+      },
+      oauth_facebook: {
+        enabled: true,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_facebook',
+      },
+      oauth_github: {
+        enabled: true,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_github',
+      },
+      oauth_microsoft: {
+        enabled: true,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_microsoft',
+      },
+      oauth_bitbucket: {
+        enabled: false,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_bitbucket',
+      },
+      oauth_discord: {
+        enabled: false,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_bitbucket',
+      }
+    } as OAuthProviders,
+  } as UserSettingsJSON) as UserSettingsResource,
+};
+
+const emptyEnvironmentContext = {
+  userSettings: new UserSettings({
+    social: {
+      oauth_google: {
+        enabled: false,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_google',
+      },
+      oauth_facebook: {
+        enabled: false,
+        required: false,
+        authenticatable: true,
+        strategy: 'oauth_facebook',
+      },
+    } as OAuthProviders,
+  } as UserSettingsJSON) as UserSettingsResource,
+};
 
 jest.mock('ui/router/RouteContext', () => {
   return {
@@ -65,8 +137,19 @@ jest.mock('ui/router/RouteContext', () => {
 });
 
 describe('<ConnectedAccountList/>', () => {
-  it('renders a list of Connected Accounts', async () => {
-    const tree = renderJSON(<ConnectedAccountList />);
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders a list of Connected Accounts', () => {
+    mockUseEnvironment.mockImplementation(() => environmentContext);
+    const tree = renderJSON(<ConnectedAccountList/>);
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders an empty list if there are no enabled providers', () => {
+    mockUseEnvironment.mockImplementation(() => emptyEnvironmentContext);
+    const tree = renderJSON(<ConnectedAccountList/>);
     expect(tree).toMatchSnapshot();
   });
 });

@@ -71,15 +71,6 @@ export type SignInIdentifier =
   | PhoneNumberIdentifier
   | Web3WalletIdentifier;
 
-export type SignInStrategy =
-  | PasswordStrategy
-  | PhoneCodeStrategy
-  | EmailCodeStrategy
-  | EmailLinkStrategy
-  | TicketStrategy
-  | Web3Strategy
-  | OAuthStrategy;
-
 export type SignInFirstFactor =
   | EmailCodeFactor
   | EmailLinkFactor
